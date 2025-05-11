@@ -15,37 +15,42 @@ class ImageService:
     def __init__(self, repository: ImageRepository = Depends()):
         self.repository = repository
 
-    async def upload_image(self, file: UploadFile) -> str:
+    async def upload_images(self, files: list[UploadFile]) -> str:
 
         # I commented this out for simplicity
         # if not file.filename.endswith((".jpg", ".png")):
         # raise RuntimeError("Invalid file type. Only .jpg and .png re allowed.")
 
-        image_id = uuid.uuid4()
+        created_images_ids = []
 
-        base_upload_dir = Path(BASE_UPLOAD_DIR)
-        image_dir = base_upload_dir / str(image_id)
-        image_dir.mkdir(parents=True, exist_ok=True)
+        for file in files:
+            image_id = uuid.uuid4()
 
-        filename = file.filename
-        path = image_dir / filename
+            base_upload_dir = Path(BASE_UPLOAD_DIR)
+            image_dir = base_upload_dir / str(image_id)
+            image_dir.mkdir(parents=True, exist_ok=True)
 
-        try:
-            await self.save_image(file, path)
-        except RuntimeError as e:
-            if image_dir.exists():
-                rmtree(image_dir)
-            raise e
+            filename = file.filename
+            path = image_dir / filename
 
-        image = Image(id=image_id, path=str(path))
+            try:
+                await self.save_image(file, path)
+            except RuntimeError as e:
+                if image_dir.exists():
+                    rmtree(image_dir)
+                raise e
 
-        try:
-            created_image = await self.repository.create(image)
-            return str(created_image.id)
-        except RuntimeError as e:
-            if image_dir.exists():
-                rmtree(image_dir)
-            raise e
+            image = Image(id=image_id, path=str(path))
+
+            try:
+                created_image = await self.repository.create(image)
+                created_images_ids.append(str(created_image.id))
+            except RuntimeError as e:
+                if image_dir.exists():
+                    rmtree(image_dir)
+                raise e
+
+        return created_images_ids
 
     async def save_image(self, file: UploadFile, path: Path) -> None:
         try:

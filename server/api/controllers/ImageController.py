@@ -11,14 +11,14 @@ images = APIRouter(prefix="/images")
 
 
 @images.post("", summary="Upload an image.")
-async def upload_image(
-    file: UploadFile, service: ImageService = Depends()
+async def upload_images(
+    files: list[UploadFile], service: ImageService = Depends()
 ) -> JSONResponse:
     try:
-        created_image_id = await service.upload_image(file)
+        created_images_ids = await service.upload_images(files)
         return JSONResponse(
             content={
-                "image_id": created_image_id,
+                "image_ids": created_images_ids,
                 "message": "Image is uploaded successfully.",
             },
             status_code=status.HTTP_201_CREATED,
