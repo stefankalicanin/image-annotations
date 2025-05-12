@@ -1,6 +1,6 @@
 FROM python:3.11.3-alpine3.17
 
-WORKDIR /code
+WORKDIR /app
 
 COPY ./requirements.txt /code/requirements.txt
 
@@ -8,7 +8,7 @@ RUN python3 -m pip install -U --upgrade pip
 
 RUN pip3 install -U --no-cache-dir --upgrade -r /code/requirements.txt
 
-COPY . /code
+COPY . /app
 
 EXPOSE 8000
 
