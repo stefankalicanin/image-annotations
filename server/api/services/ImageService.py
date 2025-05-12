@@ -10,6 +10,8 @@ from fastapi import UploadFile
 from api.repositories.ImageRepository import ImageRepository
 from api.models.ImageModel import Image
 from api.schemas.ImageSchema import ImageCreateOut
+from api.schemas.ImageSchema import ImageGetOut
+from api.schemas.ImageSchema import ImagesGetOut
 from api.config import BASE_UPLOAD_DIR
 
 
@@ -60,3 +62,12 @@ class ImageService:
                 out_file.write(content)
         except Exception as e:
             raise RuntimeError("Failed to save images.")
+
+    async def get_images(self) -> ImagesGetOut:
+        try:
+            images: List[Image] = await self.repository.get_images()
+            return ImagesGetOut(
+                images=[ImageGetOut(id=image.id, path=image.path) for image in images]
+            )
+        except RuntimeError as e:
+            raise e
