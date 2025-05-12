@@ -8,6 +8,10 @@ class ImageCreateOut(BaseModel):
     id: UUID
 
 
+class ImagesCreateOut(BaseModel):
+    ids: List[ImageCreateOut]
+
+
 class ImageGetOut(BaseModel):
     id: UUID
     path: str

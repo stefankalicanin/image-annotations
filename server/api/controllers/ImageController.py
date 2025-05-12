@@ -7,18 +7,18 @@ from fastapi import HTTPException
 
 from api.services.ImageService import ImageService
 from api.schemas.BaseResponse import BaseResponse
-from api.schemas.ImageSchema import ImageCreateOut
+from api.schemas.ImageSchema import ImagesCreateOut
 from api.schemas.ImageSchema import ImagesGetOut
 
 images = APIRouter(prefix="/images")
 
 
 @images.post(
-    "", summary="Upload an image.", response_model=BaseResponse[List[ImageCreateOut]]
+    "", summary="Upload an image.", response_model=BaseResponse[ImagesCreateOut]
 )
 async def upload_images(files: List[UploadFile], service: ImageService = Depends()):
     try:
-        created_images_ids: List[ImageCreateOut] = await service.upload_images(files)
+        created_images_ids: ImagesCreateOut = await service.upload_images(files)
         return BaseResponse(
             status_code=201,
             message="Images successfully created.",

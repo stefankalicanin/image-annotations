@@ -10,6 +10,7 @@ from fastapi import UploadFile
 from api.repositories.ImageRepository import ImageRepository
 from api.models.ImageModel import Image
 from api.schemas.ImageSchema import ImageCreateOut
+from api.schemas.ImageSchema import ImagesCreateOut
 from api.schemas.ImageSchema import ImageGetOut
 from api.schemas.ImageSchema import ImagesGetOut
 from api.config import BASE_UPLOAD_DIR
@@ -19,7 +20,7 @@ class ImageService:
     def __init__(self, repository: ImageRepository = Depends()):
         self.repository = repository
 
-    async def upload_images(self, files: List[UploadFile]) -> List[ImageCreateOut]:
+    async def upload_images(self, files: List[UploadFile]) -> ImagesCreateOut:
 
         # I commented this out for simplicity
         # if not file.filename.endswith((".jpg", ".png")):
@@ -53,7 +54,7 @@ class ImageService:
                 if image_dir.exists():
                     rmtree(image_dir)
                 raise e
-        return created_images_ids
+        return ImagesCreateOut(ids=created_images_ids)
 
     async def save_image(self, file: UploadFile, path: Path) -> int:
         try:
