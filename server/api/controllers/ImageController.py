@@ -12,6 +12,7 @@ from api.schemas.BaseResponse import BaseResponse
 from api.schemas.ImageSchema import ImagesCreateOut
 from api.schemas.ImageSchema import ImagesGetOut
 from api.schemas.ImageSchema import AnnotationCreateIn
+from api.schemas.ImageSchema import AnnotationGetOut
 from api.exceptions.CustomException import NotFoundException
 
 images = APIRouter(prefix="/images")
@@ -59,6 +60,26 @@ async def create_annotation(
         await annotation_service.create_annotation(id, anotation)
         return BaseResponse(
             status_code=201, message="Annotation successfully created.", data=None
+        )
+    except NotFoundException as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+
+@images.get(
+    "/{id}/annotations",
+    summary="Get annotation.",
+    response_model=BaseResponse[AnnotationGetOut],
+)
+async def get_annotation(
+    id: UUID,
+    annotation_service: AnnotationService = Depends(),
+):
+    try:
+        annotation: AnnotationGetOut = await annotation_service.get_annotation(id)
+        return BaseResponse(
+            status_code=200,
+            message="Annotation successfully retrieved.",
+            data=annotation,
         )
     except NotFoundException as e:
         raise HTTPException(status_code=404, detail=str(e))

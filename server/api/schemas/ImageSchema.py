@@ -1,6 +1,7 @@
 from typing import List
 from typing import Dict
 from typing import Any
+from typing import Optional
 from uuid import UUID
 
 from pydantic import BaseModel
@@ -25,3 +26,7 @@ class ImagesGetOut(BaseModel):
 
 class AnnotationCreateIn(BaseModel):
     annotation: List[Dict[str, Any]]
+
+
+class AnnotationGetOut(BaseModel):
+    annotation: Optional[List[Dict[str, Any]]]
