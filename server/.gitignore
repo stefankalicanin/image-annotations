@@ -1,0 +1,7 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# SQLAlchemy migration files (if using Alembic)
+alembic/versions/
