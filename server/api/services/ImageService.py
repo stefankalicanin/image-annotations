@@ -14,6 +14,7 @@ from api.schemas.ImageSchema import ImagesCreateOut
 from api.schemas.ImageSchema import ImageGetOut
 from api.schemas.ImageSchema import ImagesGetOut
 from api.config import BASE_UPLOAD_DIR
+from api.exceptions.CustomException import NotFoundException
 
 
 class ImageService:
@@ -72,3 +73,9 @@ class ImageService:
             )
         except RuntimeError as e:
             raise e
+
+    async def get_image_by_id(self, id: UUID) -> None:
+        image: Image | None = await self.repository.get_image_by_id(id)
+
+        if not image:
+            raise NotFoundException("Image", id)

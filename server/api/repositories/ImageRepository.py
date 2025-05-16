@@ -3,16 +3,17 @@ from typing import List
 
 from fastapi import Depends
 
-from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.future import select
+from sqlalchemy.ext.asyncio import AsyncSession
+
 
 from api.database.database import get_db
 from api.models.ImageModel import Image
 
 
 class ImageRepository:
-    def __init__(self, db: Session = Depends(get_db)):
+    def __init__(self, db: AsyncSession = Depends(get_db)):
         self.db = db
 
     async def create(self, image: Image) -> UUID:
@@ -32,3 +33,7 @@ class ImageRepository:
             return images
         except SQLAlchemyError as e:
             raise RuntimeError("Failed to get images.")
+
+    async def get_image_by_id(self, id: UUID) -> Image | None:
+        image: Image | None = await self.db.get(Image, id)
+        return image
