@@ -32,16 +32,16 @@ docker exec server alembic upgrade head
 ### Access the app
 - **Frontend:** http://localhost:3000
 - **Backend:** http://localhost:8000
-- **Api docs (Swagger):** http://localhost:8000/docs
+- **Api docs:** http://localhost:8000/docs
 
 ## Testing
 
-A set of test images is available in the `test-folder/` directory.
+A set of test images is available in the `server/test-images/` directory.
 
 To test:
 
 1. Open the frontend in your browser.  
-2. Upload a test image from the `test-folder/`.  
+2. Upload a test images from the `test-folder/`.  
 3. Draw boxes or polygons on the image.  
 4. Export the annotations – data is sent to the backend and stored in the database.  
 5. Open image to view previously saved annotations.  
