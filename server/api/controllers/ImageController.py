@@ -5,6 +5,7 @@ from fastapi import APIRouter
 from fastapi import Depends
 from fastapi import UploadFile
 from fastapi import HTTPException
+from fastapi.responses import StreamingResponse
 
 from api.services.ImageService import ImageService
 from api.services.AnnotationService import AnnotationService
@@ -88,5 +89,19 @@ async def get_annotation(
             message="Annotation successfully retrieved.",
             data=annotations,
         )
+    except NotFoundException as e:
+        raise HTTPException(status_code=404, detail=str(e))
+
+
+@images.get(
+    "/{id}/download-annotations",
+    summary="Download annotations.",
+    response_class=StreamingResponse,
+)
+async def download_annotations(
+    id: UUID, annotation_service: AnnotationService = Depends()
+):
+    try:
+        return await annotation_service.download_annotations(id)
     except NotFoundException as e:
         raise HTTPException(status_code=404, detail=str(e))

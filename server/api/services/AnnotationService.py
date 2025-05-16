@@ -1,6 +1,10 @@
 from uuid import UUID
+from io import BytesIO
+import json
 
 from fastapi import Depends
+from fastapi.responses import StreamingResponse
+
 
 from api.repositories.AnnotationRepository import AnnotationRepository
 from api.services.ImageService import ImageService
@@ -48,3 +52,21 @@ class AnnotationService:
             )
         except NotFoundException as e:
             raise
+
+    async def download_annotations(self, id: UUID) -> StreamingResponse:
+        try:
+            annotations_data_out = await self.get_annotations(id)
+            annotations = annotations_data_out.annotations
+
+            json_bytes = json.dumps(annotations, indent=2).encode("utf-8")
+            buffer = BytesIO(json_bytes)
+
+            return StreamingResponse(
+                buffer,
+                media_type="application/json",
+                headers={
+                    "Content-Disposition": f"attachment; filename=annotations_{id}.json"
+                },
+            )
+        except NotFoundException as e:
+            raise e
