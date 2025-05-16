@@ -7,31 +7,44 @@
 - **Migrations:** Alembic  
 - **Frontend:** React, TypeScript  
 
-## Test Images
-
-- You can find test images at server/test-images
-
 ##  Getting Started (Docker)
 
-### 1. Clone the repository
+### Clone the repository
 ```bash
 git clone https://github.com/stefankalicanin/image-annotations.git
 ```
 
-### 2. Navigate to the project folder
+### Navigate to the project folder
 ```bash
 cd image-annotations
 ```
 
-### 3. Run with docker
+### Run with docker
 ```bash
 docker compose -f docker-compose.dev.yaml up
 ```
 
-### 4. Run the migrations
+### Run the migrations
 ```bash
 docker exec server alembic upgrade head
 ```
 
+### Access the app
+- **Frontend:** http://localhost:3000
+- **Backend:** http://localhost:8000
+- **Api docs (Swagger):** http://localhost:8000/docs
+
+## Testing
+
+A set of test images is available in the `test-folder/` directory.
+
+To test:
+
+1. Open the frontend in your browser.  
+2. Upload a test image from the `test-folder/`.  
+3. Draw boxes or polygons on the image.  
+4. Export the annotations – data is sent to the backend and stored in the database.  
+5. Open image to view previously saved annotations.  
+6. Previously saved annotations can be downloaded as a JSON file.  
 
 
