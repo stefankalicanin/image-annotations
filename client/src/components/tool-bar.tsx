@@ -1,5 +1,6 @@
 import React from 'react';
 
+import { config } from '../config/config';
 import { Tool } from '../types/annotations';
 
 interface Props {
@@ -8,6 +9,7 @@ interface Props {
   onExportAnnotations: () => void;
   onClose: () => void;
   hasAnnotations: boolean;
+  imageId: string;
 }
 
 export const ToolBar: React.FC<Props> = ({
@@ -16,6 +18,7 @@ export const ToolBar: React.FC<Props> = ({
   onExportAnnotations,
   onClose,
   hasAnnotations,
+  imageId,
 }) => {
   return (
     <div className="flex justify-center items-center space-x-2">
@@ -51,12 +54,12 @@ export const ToolBar: React.FC<Props> = ({
           </button>
         </div>
       ) : (
-        <button
-          onClick={() => alert('Download.')}
+        <a
+          href={`${config.baseUrl}/images/${imageId}/download-annotations`}
           className="px-2 py-2 text-base font-semibold rounded-lg text-[#828284] hover:text-white"
         >
-          Download
-        </button>
+          Download (json)
+        </a>
       )}
     </div>
   );

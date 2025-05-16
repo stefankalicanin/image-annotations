@@ -105,6 +105,7 @@ export const ImageCanvas: React.FC<Props> = ({ imageUrl, imageId, close }) => {
           onExportAnnotations={exportAnnotations}
           onClose={close}
           hasAnnotations={hasAnnotations}
+          imageId={imageId}
         />
       ) : (
         <Loading />
