@@ -13,13 +13,17 @@ class AnnotationRepository:
     def __init__(self, db: AsyncSession = Depends(get_db)):
         self.db = db
 
-    async def create_annotation(self, annotation: Annotation) -> None:
+    async def create_annotations(self, annotation: Annotation) -> int:
         self.db.add(annotation)
         await self.db.commit()
+        await self.db.refresh(annotation)
 
-    async def get_annotation(self, id: UUID) -> Annotation | None:
+        return annotation.id
+
+    async def get_annotations(self, id: UUID) -> Annotation | None:
         result = await self.db.execute(
             select(Annotation).where(Annotation.image_id == id)
         )
-        annotation = result.scalars().first()
-        return annotation
+        annotations = result.scalars().first()
+
+        return annotations

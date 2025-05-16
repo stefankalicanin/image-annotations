@@ -11,8 +11,9 @@ from api.services.AnnotationService import AnnotationService
 from api.schemas.BaseResponse import BaseResponse
 from api.schemas.ImageSchema import ImagesCreateOut
 from api.schemas.ImageSchema import ImagesGetOut
-from api.schemas.ImageSchema import AnnotationCreateIn
-from api.schemas.ImageSchema import AnnotationGetOut
+from api.schemas.AnnotationSchema import AnnotationCreateIn
+from api.schemas.AnnotationSchema import AnnotationGetOut
+from api.schemas.AnnotationSchema import AnnotationCreateOut
 from api.exceptions.CustomException import NotFoundException
 
 images = APIRouter(prefix="/images")
@@ -49,17 +50,23 @@ async def get_images(service: ImageService = Depends()):
 
 
 @images.post(
-    "/{id}/annotations", summary="Create annotation.", response_model=BaseResponse
+    "/{id}/annotations",
+    summary="Create annotation.",
+    response_model=BaseResponse[AnnotationCreateOut],
 )
 async def create_annotation(
     id: UUID,
-    anotation: AnnotationCreateIn,
+    anotations: AnnotationCreateIn,
     annotation_service: AnnotationService = Depends(),
 ):
     try:
-        await annotation_service.create_annotation(id, anotation)
+        created_annotations_id = await annotation_service.create_annotations(
+            id, anotations
+        )
         return BaseResponse(
-            status_code=201, message="Annotation successfully created.", data=None
+            status_code=201,
+            message="Annotation successfully created.",
+            data=created_annotations_id,
         )
     except NotFoundException as e:
         raise HTTPException(status_code=404, detail=str(e))
@@ -75,11 +82,11 @@ async def get_annotation(
     annotation_service: AnnotationService = Depends(),
 ):
     try:
-        annotation: AnnotationGetOut = await annotation_service.get_annotation(id)
+        annotations: AnnotationGetOut = await annotation_service.get_annotations(id)
         return BaseResponse(
             status_code=200,
             message="Annotation successfully retrieved.",
-            data=annotation,
+            data=annotations,
         )
     except NotFoundException as e:
         raise HTTPException(status_code=404, detail=str(e))
