@@ -10,15 +10,15 @@ from pydantic import BaseModel
 from pydantic import Field
 
 class Point(BaseModel):
-    x:int
-    y:int
+    x:float
+    y:float
 
 class Box(BaseModel):
     type:Literal["box"]  
-    x:int
-    y:int
-    w:int
-    h:int
+    x:float
+    y:float
+    w:float
+    h:float
 
 class Polygon(BaseModel):
     type:Literal["polygon"] 

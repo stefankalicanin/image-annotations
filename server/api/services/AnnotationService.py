@@ -58,9 +58,10 @@ class AnnotationService:
     async def download_annotations(self, id: UUID) -> StreamingResponse:
         try:
             annotations_data_out = await self.get_annotations(id)
-            annotations = annotations_data_out.annotations
+            serialized_annotations = [a.dict() for a in annotations_data_out.annotations
+]
 
-            json_bytes = json.dumps(annotations, indent=2).encode("utf-8")
+            json_bytes = json.dumps(serialized_annotations, indent=2).encode("utf-8")
             buffer = BytesIO(json_bytes)
 
             return StreamingResponse(

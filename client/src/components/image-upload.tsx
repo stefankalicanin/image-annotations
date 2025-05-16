@@ -1,9 +1,9 @@
 import React from 'react';
+
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
-import { fetcher } from '../service/fetcher';
-import { ImagesCreateOutResponse } from '../types/api';
+import { uploadImages } from '../service/image-service';
 
 export const ImageUpload: React.FC = () => {
   const [selectedImages, setSelectedImages] = React.useState<File[]>([]);
@@ -16,7 +16,6 @@ export const ImageUpload: React.FC = () => {
     if (files) {
       const newSelectedImages = Array.from(files);
       setSelectedImages((prevImages) => [...prevImages, ...newSelectedImages]);
-
       const newPreviews = newSelectedImages.map((file) => URL.createObjectURL(file));
       setPreviews((prevPreviews) => [...prevPreviews, ...newPreviews]);
     }
@@ -34,10 +33,7 @@ export const ImageUpload: React.FC = () => {
         selectedImages.forEach((file) => {
           formData.append('files', file);
         });
-        const response = await fetcher<ImagesCreateOutResponse>('/images', {
-          method: 'POST',
-          body: formData,
-        });
+        const response = await uploadImages(formData);
         toast.success(response.message);
         navigate('/all');
       } catch (error: any) {

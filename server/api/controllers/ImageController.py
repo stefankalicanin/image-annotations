@@ -33,21 +33,16 @@ async def upload_images(files: List[UploadFile], service: ImageService = Depends
         )
     except RuntimeError as e:
         raise HTTPException(status_code=500, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"An unexpected error occured.{e}")
+    
 
 
 @images.get("", summary="Get all images.", response_model=BaseResponse[ImagesGetOut])
 async def get_images(service: ImageService = Depends()):
-    try:
         images: ImagesGetOut = await service.get_images()
         return BaseResponse(
             status_code=200, message="Images successfully retrieved.", data=images
         )
-    except RuntimeError as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=500, detail="An unexpected error occured.")
+    
 
 
 @images.post(
