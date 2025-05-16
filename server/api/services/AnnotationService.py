@@ -25,14 +25,16 @@ class AnnotationService:
         self.repository = repository
 
     async def create_annotations(
-        self, id: UUID, anotation: AnnotationCreateIn
+        self, id: UUID, annotations: AnnotationCreateIn
     ) -> AnnotationCreateOut:
         try:
             await self.image_service.get_image_by_id(id)
 
+            serialized_annotations = [a.dict() for a in annotations.annotations]
             annotations: Annotation = Annotation(
-                image_id=id, data=anotation.annotations
+                image_id=id, data=serialized_annotations
             )
+           
             created_annotation_id = await self.repository.create_annotations(
                 annotations
             )
@@ -56,9 +58,10 @@ class AnnotationService:
     async def download_annotations(self, id: UUID) -> StreamingResponse:
         try:
             annotations_data_out = await self.get_annotations(id)
-            annotations = annotations_data_out.annotations
+            serialized_annotations = [a.dict() for a in annotations_data_out.annotations
+]
 
-            json_bytes = json.dumps(annotations, indent=2).encode("utf-8")
+            json_bytes = json.dumps(serialized_annotations, indent=2).encode("utf-8")
             buffer = BytesIO(json_bytes)
 
             return StreamingResponse(

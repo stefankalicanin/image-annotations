@@ -1,24 +1,24 @@
 import React from 'react';
+
 import { toast } from 'react-toastify';
 
-import { fetcher } from '../service/fetcher';
-import { ImagesGetOutResponse } from '../types/api';
-import { ImageGetOut } from '../types/api';
-import { config } from '../config/config';
 import { ImageCanvas } from './image-canvas';
+import { Loading } from './loading';
+import { getImages } from '../service/image-service';
+import { config } from '../config/config';
+import { ImageGetOut } from '../types/api';
 
 export const Images: React.FC = () => {
   const [images, setImages] = React.useState<ImageGetOut[]>([]);
   const [selectedImage, setSelectedImage] = React.useState<ImageGetOut | null>(null);
   const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
-  const getImages = async () => {
+  const fetchImages = async () => {
     try {
-      const response = await fetcher<ImagesGetOutResponse>('/images', {
-        method: 'GET',
-      });
+      const response = await getImages();
       setImages(response.data.images);
     } catch (error: any) {
+      console.log(error);
       toast.error(error.message);
     } finally {
       setIsLoading(false);
@@ -26,15 +26,11 @@ export const Images: React.FC = () => {
   };
 
   React.useEffect(() => {
-    getImages();
+    fetchImages();
   }, []);
 
   if (isLoading) {
-    return (
-      <div className="text-white flex justify-center items-center text-center w-full">
-        <p className="text-base font-semibold">Loading...</p>
-      </div>
-    );
+    return <Loading />;
   }
 
   if (selectedImage) {
