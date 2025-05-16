@@ -41,7 +41,7 @@ A set of test images is available in the `server/test-images/` directory.
 To test:
 
 1. Open the frontend in your browser.  
-2. Upload a test images from the `test-folder/`.  
+2. Upload a test images from the `test-images/`.  
 3. Draw boxes or polygons on the image.  
 4. Export the annotations – data is sent to the backend and stored in the database.  
 5. Open image to view previously saved annotations.  
