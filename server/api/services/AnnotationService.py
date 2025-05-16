@@ -25,14 +25,16 @@ class AnnotationService:
         self.repository = repository
 
     async def create_annotations(
-        self, id: UUID, anotation: AnnotationCreateIn
+        self, id: UUID, annotations: AnnotationCreateIn
     ) -> AnnotationCreateOut:
         try:
             await self.image_service.get_image_by_id(id)
 
+            serialized_annotations = [a.dict() for a in annotations.annotations]
             annotations: Annotation = Annotation(
-                image_id=id, data=anotation.annotations
+                image_id=id, data=serialized_annotations
             )
+           
             created_annotation_id = await self.repository.create_annotations(
                 annotations
             )
