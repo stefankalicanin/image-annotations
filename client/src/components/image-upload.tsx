@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import { fetcher } from '../service/fetcher';
-import { ImagesCreateOutResponse } from '../types/images';
+import { ImagesCreateOutResponse } from '../types/api';
 
 export const ImageUpload: React.FC = () => {
   const [selectedImages, setSelectedImages] = React.useState<File[]>([]);
