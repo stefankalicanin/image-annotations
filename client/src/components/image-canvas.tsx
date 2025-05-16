@@ -71,8 +71,8 @@ export const ImageCanvas: React.FC<Props> = ({ imageUrl, imageId, close }) => {
 
   const exportAnnotations = async () => {
     try {
-      const scaledBoxes: Box[] = boxes.map((box) => scaleBoxForExport(box, scale));
-      const scaledPolygons: Polygon[] = polygons.map((polygon) =>
+      const scaledBoxes: Box[] = boxes.map((box: Box) => scaleBoxForExport(box, scale));
+      const scaledPolygons: Polygon[] = polygons.map((polygon: Polygon) =>
         scalePolygonForExport(polygon, scale),
       );
       const payload: AnnotationsCreateIn = {

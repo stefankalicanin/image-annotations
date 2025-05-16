@@ -13,12 +13,12 @@ class AnnotationRepository:
     def __init__(self, db: AsyncSession = Depends(get_db)):
         self.db = db
 
-    async def create_annotations(self, annotation: Annotation) -> int:
-        self.db.add(annotation)
+    async def create_annotations(self, annotations: Annotation) -> int:
+        self.db.add(annotations)
         await self.db.commit()
-        await self.db.refresh(annotation)
+        await self.db.refresh(annotations)
 
-        return annotation.id
+        return annotations.id
 
     async def get_annotations(self, id: UUID) -> Annotation | None:
         result = await self.db.execute(

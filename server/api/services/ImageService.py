@@ -22,11 +22,6 @@ class ImageService:
         self.repository = repository
 
     async def upload_images(self, files: List[UploadFile]) -> ImagesCreateOut:
-
-        # I commented this out for simplicity
-        # if not file.filename.endswith((".jpg", ".png")):
-        # raise RuntimeError("Invalid file type. Only .jpg and .png re allowed.")
-
         created_images_ids: List[ImageCreateOut] = []
 
         for file in files:
@@ -66,13 +61,11 @@ class ImageService:
             raise RuntimeError("Failed to save images.")
 
     async def get_images(self) -> ImagesGetOut:
-        try:
             images: List[Image] = await self.repository.get_images()
             return ImagesGetOut(
                 images=[ImageGetOut(id=image.id, path=image.path) for image in images]
             )
-        except RuntimeError as e:
-            raise e
+        
 
     async def get_image_by_id(self, id: UUID) -> None:
         image: Image | None = await self.repository.get_image_by_id(id)

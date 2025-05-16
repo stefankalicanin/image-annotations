@@ -8,7 +8,6 @@ export const ShowImages = () => {
           Choose for annotate
         </h1>
       </div>
-
       <Images />
     </div>
   );

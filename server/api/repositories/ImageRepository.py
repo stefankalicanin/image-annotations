@@ -27,12 +27,10 @@ class ImageRepository:
             raise RuntimeError("Failed to save images.")
 
     async def get_images(self) -> List[Image]:
-        try:
             response = await self.db.execute(select(Image))
             images = response.scalars().all()
             return images
-        except SQLAlchemyError as e:
-            raise RuntimeError("Failed to get images.")
+       
 
     async def get_image_by_id(self, id: UUID) -> Image | None:
         image: Image | None = await self.db.get(Image, id)
